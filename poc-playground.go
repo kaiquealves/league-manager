@@ -105,6 +105,23 @@ func criaConfrontos(times []string) []string {
 
 }
 
+func sorteiaGrupos(times []string, qtdeGrupos int) [][]string {
+
+	times = shuffleStringSlice(times)
+
+	//TO-DO: Inicializar este slice 2D de maneira dinâmica
+	grupos := [][]string{{"GRUPO 1"}, {"GRUPO 2"}, {"GRUPO 3"}, {"GRUPO 4"}}
+	grupo := 0
+
+	for i := 0; i < len(times); i++ {
+		grupo = i % qtdeGrupos
+		grupos[grupo] = append(grupos[grupo], times[i])
+	}
+
+	return grupos
+
+}
+
 func main() {
 
 	times := []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q"}
@@ -119,5 +136,7 @@ func main() {
 	fmt.Println("Qtde Rounds: ", rounds)
 	fmt.Println("Jogos Por Rodada: ", qtdeJogosPorRodada)
 	fmt.Println("Confrontos: ", criaConfrontos(times))
+	fmt.Println("------ Iniciando Sorteio dos Grupos - Equipes Participantes: ", competidores)
+	fmt.Println("Grupos: ", sorteiaGrupos(times, 4))
 
 }
