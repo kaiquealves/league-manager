@@ -38,8 +38,8 @@ tags:
   - name: user
     description: Operations used to perform user data management
     externalDocs:
-    description: More
-    url: http://leaguemanager.io/docs/users
+      description: More
+      url: http://leaguemanager.io/docs/users
 paths:
   /tournament:
     put:
@@ -733,6 +733,176 @@ paths:
         - petstore_auth:
             - write:pets
             - read:pets
+  /extraPoint:
+    put:
+      tags:
+        - extraPoint
+      summary: Update an existing extra point
+      description: Update an existing extra point by Id
+      operationId: updateExtraPoint
+      requestBody:
+        description: Update an existent extra point
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExtraPoint'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ExtraPoint'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ExtraPoint'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtraPoint'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ExtraPoint'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Extra point not found
+        '405':
+          description: Validation exception
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+    post:
+      tags:
+        - extraPoint
+      summary: Creation of a new extraPoint
+      description: Creation of a new extra point to increase or decrease a competitor total pontuation
+      operationId: addExtraPoint
+      requestBody:
+        description: Create a new extra point
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExtraPoint'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ExtraPoint'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ExtraPoint'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtraPoint'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ExtraPoint'
+        '405':
+          description: Invalid input
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  /extraPoint/findByTournament/{tournamentId}:
+    get:
+      tags:
+        - extraPoint
+      summary: List extra points related to an specific tournament
+      description: Provided tournamentId
+      operationId: findExtraPoint
+      parameters:
+        - name: tournamentId
+          in: path
+          description: Id of tournament
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExtraPoint'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExtraPoint'
+        '400':
+          description: Invalid status value
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  /extraPoint/{extraPointId}:
+    get:
+      tags:
+        - extraPoint
+      summary: Find extra points by ID
+      description: Returns a specific extra point register
+      operationId: getExtraPointById
+      parameters:
+        - name: extraPointId
+          in: path
+          description: ID of extra point to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtraPoint'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ExtraPoint'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Competitor not found
+      security:
+        - api_key: []
+        - petstore_auth:
+            - write:pets
+            - read:pets
+    delete:
+      tags:
+        - extraPoint
+      summary: Deletes a extra point
+      description: delete a extra point
+      operationId: deleteExtraPoint
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: extraPointId
+          in: path
+          description: Extra point id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid template value
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
   /user:
     post:
       tags:
@@ -918,55 +1088,6 @@ paths:
           description: User not found
 components:
   schemas:
-    Order:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          example: 10
-        petId:
-          type: integer
-          format: int64
-          example: 198772
-        quantity:
-          type: integer
-          format: int32
-          example: 7
-        shipDate:
-          type: string
-          format: date-time
-        status:
-          type: string
-          description: Order Status
-          example: approved
-          enum:
-            - placed
-            - approved
-            - delivered
-        complete:
-          type: boolean
-      xml:
-        name: order
-    Customer:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          example: 100000
-        username:
-          type: string
-          example: fehguy
-        address:
-          type: array
-          xml:
-            name: addresses
-            wrapped: true
-          items:
-            $ref: '#/components/schemas/Address'
-      xml:
-        name: customer
     Address:
       type: object
       properties:
@@ -1183,6 +1304,81 @@ components:
             - inactive
       xml:
         name: tournamenttemplate
+    Match:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        tournament:
+            $ref: '#/components/schemas/Tournament'
+        phase:
+          type: string
+          example: "Classificatory"
+        round:
+          type: integer
+          format: int64
+          example: "1"
+        competitorA:
+            $ref: '#/components/schemas/Competitor'
+        competitorB:
+            $ref: '#/components/schemas/Competitor'
+        finalResultA:
+          type: integer
+          format: int64
+          example: "2"
+        finalResultB:
+          type: integer
+          format: int64
+          example: "1"
+        status: 
+          type: string
+          description: Match status
+          example: scheduled
+          default: scheduled
+          enum:
+            - scheduled
+            - postponed
+            - rescheduled
+            - realized
+            - canceled
+    ExtraPoint:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10423
+        tournament:
+            $ref: '#/components/schemas/Tournament'
+        phase:
+          type: string
+          example: "Classificatory"
+        round:
+          type: integer
+          format: int64
+          example: "1"
+        competitor:
+            $ref: '#/components/schemas/Competitor'
+        points:
+          type: integer
+          format: int64
+          example: "-1"
+        reason:
+          type: string
+          description: "Used to add or subtract points to an specific competitor"
+          example: "Penalty caused because player Jhon Doe isn't regular"
+        status: 
+          type: string
+          description: Penalty or bonus (extra-point) status
+          example: confirmed
+          default: confirmed
+          enum:
+            - confirmed
+            - canceled
+      xml:
+        name: match
     ApiResponse:
       type: object
       properties:
