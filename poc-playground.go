@@ -77,7 +77,7 @@ func jogosPorRodada(qtdeTimes int) []int {
 	return reverseIntSlice(jogosRodada)
 }
 
-func criaConfrontos(times []string) []string {
+func criaConfrontosPlayoffs(times []string) []string {
 
 	times = shuffleStringSlice(times)
 	jogosRodada := jogosPorRodada(len(times))
@@ -135,7 +135,7 @@ func main() {
 	fmt.Println("Qtde de Times: ", competidores)
 	fmt.Println("Qtde Rounds: ", rounds)
 	fmt.Println("Jogos Por Rodada: ", qtdeJogosPorRodada)
-	fmt.Println("Confrontos: ", criaConfrontos(times))
+	fmt.Println("Confrontos: ", criaConfrontosPlayoffs(times))
 	fmt.Println("------ Iniciando Sorteio dos Grupos - Equipes Participantes: ", competidores)
 	fmt.Println("Grupos: ", sorteiaGrupos(times, 4))
 
